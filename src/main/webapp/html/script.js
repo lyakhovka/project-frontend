@@ -19,7 +19,7 @@ function fillTable(pageNumber, pageSize) {
 
         players.forEach((player) => {
             htmlRows +=
-                `<tr>
+                `<tr class="row" data-account-id="${player.id}">
                     <td class="cell">${player.id}</td>
                     <td class="cell">${player.name}</td>
                     <td class="cell">${player.title}</td>
@@ -29,12 +29,12 @@ function fillTable(pageNumber, pageSize) {
                     <td class="cell">${player.birthday}</td>
                     <td class="cell">${player.banned}</td>
                     <td class="cell">
-                        <button class="edit-button">
+                        <button class="edit-button" value="${player.id}">
                             <img src="../img/edit.png" alt="edit">
                         </button>
                     </td>
                      <td class="cell">
-                        <button class="delete-button">
+                        <button class="delete-button" value="${player.id}">
                             <img src="../img/delete.png" alt="delete">
                         </button>
                     </td>
@@ -49,13 +49,19 @@ function fillTable(pageNumber, pageSize) {
 
         $playersTableBody.insertAdjacentHTML("beforeend", htmlRows)
 
+        const deleteButtons = document.querySelectorAll('.delete-button');
+        deleteButtons.forEach(button => button.addEventListener('click', removeAccountHandler))
+
+        const editButtons = document.querySelectorAll('.edit-button');
+        editButtons.forEach(button => button.addEventListener('click', editAccountHandler))
+
     })
 }
 
 function updatePlayersCount() {
     $.get('/rest/players/count', (count) => {
        accountsCount = count;
-        updatePaginationButtons();
+       updatePaginationButtons();
     })
 
 }
@@ -120,3 +126,31 @@ function setActivePageButton(activePageButtonIndex=0){
     $activeButton.classList.add('active-pagination-button');
 }
 
+function removeAccountHandler(e){
+    const accountID = e.currentTarget.value;
+    console.log('remove' + accountID)
+    fetch(`http://localhost:8080/rest/players/${accountID}`,{
+        method: 'DELETE'
+    }).then(response =>{
+        if(!response.ok){
+            throw new Error('DELETE response is not OK');
+        }
+        else console.log('Account ' + accountID + ' was removed');
+    })
+
+    updatePlayersCount();
+    fillTable(currentPageNumber, accountsPerPage);
+
+
+}
+
+function editAccountHandler(e){
+    const accountId = e.currentTarget.value;
+    console.log('edit' + accountId)
+    const currentRow = document.querySelector(`.row[data-account-id='${accountId}']`)
+
+    const currentImage = currentRow.querySelector('.edit-button img');
+    currentImage.src = "../img/save.png";
+    // console.log(currentRow)
+    // console.log(currentImage)
+}
