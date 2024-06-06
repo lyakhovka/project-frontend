@@ -1,0 +1,19 @@
+.players-table {
+    border: 1px solid black;
+}
+
+.header-cell{
+    border: 1px solid black;
+    min-width: auto;
+    padding:10px;
+}
+
+.cell{
+    border: 1px solid black;
+    min-width: auto;
+    padding:10px;
+}
+
+.active-pagination-button{
+    color: red;
+}
