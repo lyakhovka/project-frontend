@@ -3,6 +3,10 @@ let accountsPerPage = 3;
 let pagesAmount = null;
 let currentPageNumber = 0;
 
+const RACE_ARRAY= ['HUMAN', 'DWARF', 'ELF', 'GIANT', 'ORC', 'TROLL', 'HOBBIT'];
+const PROFESSION_ARRAY = ['WARRIOR', 'ROGUE', 'SORCERER', 'CLERIC', 'PALADIN', 'NAZGUL', 'WARLOCK', 'DRUID'];
+const BANNED_ARRAY = ['true', 'false'];
+
 
 fillTable(currentPageNumber, accountsPerPage);
 updatePlayersCount();
@@ -21,13 +25,13 @@ function fillTable(pageNumber, pageSize) {
             htmlRows +=
                 `<tr class="row" data-account-id="${player.id}">
                     <td class="cell">${player.id}</td>
-                    <td class="cell">${player.name}</td>
-                    <td class="cell">${player.title}</td>
-                    <td class="cell">${player.race}</td>
-                    <td class="cell">${player.profession}</td>
-                    <td class="cell">${player.level}</td>
-                    <td class="cell">${player.birthday}</td>
-                    <td class="cell">${player.banned}</td>
+                    <td class="cell" data-account-name>${player.name}</td>
+                    <td class="cell" data-account-title>${player.title}</td>
+                    <td class="cell" data-account-race>${player.race}</td>
+                    <td class="cell" data-account-profession>${player.profession}</td>
+                    <td class="cell" data-account-level>${player.level}</td>
+                    <td class="cell" data-account-birthday>${new Date(player.birthday).toLocaleDateString('uk')}</td>
+                    <td class="cell" data-account-banned>${player.banned}</td>
                     <td class="cell">
                         <button class="edit-button" value="${player.id}">
                             <img src="../img/edit.png" alt="edit">
@@ -146,11 +150,51 @@ function removeAccountHandler(e){
 
 function editAccountHandler(e){
     const accountId = e.currentTarget.value;
-    console.log('edit' + accountId)
-    const currentRow = document.querySelector(`.row[data-account-id='${accountId}']`)
 
-    const currentImage = currentRow.querySelector('.edit-button img');
-    currentImage.src = "../img/save.png";
-    // console.log(currentRow)
-    // console.log(currentImage)
+    const $currentRow = document.querySelector(`.row[data-account-id="${accountId}"]`);
+    const $currentRemoveButton = $currentRow.querySelector('.delete-button');
+
+    const $currentImage = $currentRow.querySelector('.edit-button img');
+
+
+    const $currentName = $currentRow.querySelector('[data-account-name]')
+    const $currentTitle = $currentRow.querySelector('[data-account-title]')
+    const $currentRace = $currentRow.querySelector('[data-account-race]')
+    const $currentProfession = $currentRow.querySelector('[data-account-profession]')
+    const $currentBanned =  $currentRow.querySelector('[data-account-banned]')
+
+    $currentImage.src = "../img/save.png";
+
+    $currentName.childNodes[0].replaceWith(createInput($currentName.innerHTML))
+    $currentTitle.childNodes[0].replaceWith(createInput($currentTitle.innerHTML))
+    $currentRace.childNodes[0].replaceWith(createSelect(RACE_ARRAY, $currentRace.innerHTML))
+    $currentProfession.childNodes[0].replaceWith(createSelect(PROFESSION_ARRAY, $currentProfession.innerHTML))
+    $currentBanned.childNodes[0].replaceWith(createSelect(BANNED_ARRAY, $currentBanned.innerHTML))
+}
+
+function createInput(value){
+    const $htmlInputElement = document.createElement('input');
+
+    $htmlInputElement.setAttribute('type', 'text');
+    $htmlInputElement.setAttribute('value', value);
+    $htmlInputElement.setAttribute('data-value', value);
+
+    $htmlInputElement.addEventListener('input', e =>{
+        $htmlInputElement.setAttribute('data-value', `${e.currentTarget.value}`)
+    })
+    return $htmlInputElement;
+}
+
+function createSelect(optionsArray, defaultValue){
+    const $options = createSelectOptions(optionsArray, defaultValue);
+    const $selectElement = document.createElement('select');
+
+    $selectElement.insertAdjacentHTML('afterbegin', $options);
+
+    $selectElement.setAttribute('data-value', defaultValue);
+
+    $selectElement.addEventListener('change', e =>{
+        $selectElement.setAttribute('data-value', e.currentTarget.value)
+    })
+    return $selectElement
 }
