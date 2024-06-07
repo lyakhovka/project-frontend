@@ -17,3 +17,7 @@
 .active-pagination-button{
     color: red;
 }
+
+.hidden {
+    visibility: hidden;
+}

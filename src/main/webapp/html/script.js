@@ -130,22 +130,76 @@ function setActivePageButton(activePageButtonIndex=0){
     $activeButton.classList.add('active-pagination-button');
 }
 
+// function removeAccountHandler(e){
+//     const accountID = e.currentTarget.value;
+//     console.log('remove' + accountID)
+//     fetch(`http://localhost:8080/rest/players/${accountID}`,{
+//         method: 'DELETE'
+//     }).then(response =>{
+//         if(!response.ok){
+//             throw new Error('DELETE response is not OK');
+//         }
+//         else console.log('Account ' + accountID + ' was removed');
+//     })
+//
+//     updatePlayersCount();
+//     fillTable(currentPageNumber, accountsPerPage);
+//
+//
+// }
+
+function createPlayer(){
+   // console.log('CREATE');
+}
+
 function removeAccountHandler(e){
     const accountID = e.currentTarget.value;
     console.log('remove' + accountID)
-    fetch(`http://localhost:8080/rest/players/${accountID}`,{
-        method: 'DELETE'
-    }).then(response =>{
-        if(!response.ok){
-            throw new Error('DELETE response is not OK');
+    $.ajax({
+        url: `/rest/players/${accountID}`,
+        type: 'DELETE',
+        contentType: "application/json",
+        success: function (){
+             updatePlayersCount();
+            fillTable(currentPageNumber, accountsPerPage);
         }
-        else console.log('Account ' + accountID + ' was removed');
     })
+}
 
-    updatePlayersCount();
-    fillTable(currentPageNumber, accountsPerPage);
+// function updateAccount({accountId, data}){
+//      fetch(`http://localhost:8080/rest/players/${accountId}`,{
+//          method: "POST",
+//          body: JSON.stringify({
+//              data: data
+//          }),
+//          headers: {
+//              "content-type": "application/json",
+//              "data-type": "json"
+//          }
+//      }).then(response =>{
+//          if(!response.ok){
+//              throw new Error('UPDATE response is not OK');
+//          }
+//          else console.log('Account ' + accountId + ' was updated');
+//      })
+//
+//     // updatePlayersCount();
+//     fillTable(currentPageNumber, accountsPerPage);
+//     // console.log('here');
+// }
 
-
+function updateAccount({accountId, data}){
+    $.ajax({
+        url: `/rest/players/${accountId}`,
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        dataType: "json",
+        success: function (){
+          //  updatePlayersCount();
+            fillTable(currentPageNumber, accountsPerPage);
+        }
+    })
 }
 
 function editAccountHandler(e){
@@ -164,6 +218,21 @@ function editAccountHandler(e){
     const $currentBanned =  $currentRow.querySelector('[data-account-banned]')
 
     $currentImage.src = "../img/save.png";
+
+    $currentImage.addEventListener('click', () => {
+        const params = {
+            accountId : accountId,
+            data: {
+                name: $currentName.childNodes[0].getAttribute('data-value'),
+                title: $currentTitle.childNodes[0].getAttribute('data-value'),
+                race: $currentRace.childNodes[0].getAttribute('data-value'),
+                profession: $currentProfession.childNodes[0].getAttribute('data-value'),
+                banned: $currentBanned.childNodes[0].getAttribute('data-value'),
+            }
+        }
+        updateAccount(params)
+    })
+    $currentRemoveButton.classList.add('hidden');
 
     $currentName.childNodes[0].replaceWith(createInput($currentName.innerHTML))
     $currentTitle.childNodes[0].replaceWith(createInput($currentTitle.innerHTML))

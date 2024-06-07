@@ -40,5 +40,37 @@
     <span class="pagination-buttons"></span>
 </div>
 
+<div>
+    <h2>Create new account</h2>
+    <div class = "create-field">
+        <label for="create-name-input">Name:</label>
+        <input id="create-name-input" type="text" data-create-name/>
+    </div>
+    <div class = "create-field">
+        <label for="create-title-input">Title:</label>
+        <input id="create-title-input" type="text" data-create-title/>
+    </div>
+    <div class = "create-field">
+        <label for="create-race-input">Race:</label>
+        <select id="create-race-input" data-create-race></select>
+    </div>
+    <div class = "create-field">
+        <label for="create-profession-select">Profession:</label>
+        <select id="create-profession-select" data-create-profession></select>
+    </div>
+    <div class = "create-field">
+        <label for="create-level-input">Level:</label>
+        <input id="create-level-input" type="text" data-level-title/>
+    </div>
+    <div class = "create-field">
+        <label for="create-birthday-input">Birthday:</label>
+        <input id="create-birthday-input" type="date" data-create-birthday/>
+    </div>
+    <div class = "create-field">
+        <label for="create-banned-checkbox">Banned:</label>
+        <input id="create-banned-checkbox" type="checkbox" data-create-title/>
+    </div>
+    <button class="save-button" onclick="setTimeout(()=>{createPlayer()}, 0)"> CREATE </button>
+</div>
 </body>
 </html>
