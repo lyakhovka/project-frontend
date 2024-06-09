@@ -7,16 +7,23 @@ const RACE_ARRAY= ['HUMAN', 'DWARF', 'ELF', 'GIANT', 'ORC', 'TROLL', 'HOBBIT'];
 const PROFESSION_ARRAY = ['WARRIOR', 'ROGUE', 'SORCERER', 'CLERIC', 'PALADIN', 'NAZGUL', 'WARLOCK', 'DRUID'];
 const BANNED_ARRAY = ['true', 'false'];
 
-
+setTimeout(() =>{initCreateForm()}, 1000);
+// initCreateForm();
 fillTable(currentPageNumber, accountsPerPage);
 updatePlayersCount();
-// setTimeout(()=>{createAccountPerPageDropdown()}, 0)
-createAccountPerPageDropdown()
+setTimeout(()=>{createAccountPerPageDropdown()}, 1000)
+// createAccountPerPageDropdown()
 
+function initCreateForm(){
+    const $raceSelect = document.querySelector('[data-create-race]');
+    const $professionSelect = document.querySelector('[data-create-profession]');
+
+    $raceSelect.insertAdjacentHTML('afterbegin', createSelectOptions(RACE_ARRAY, RACE_ARRAY[0]))
+    $professionSelect.insertAdjacentHTML('afterbegin', createSelectOptions(PROFESSION_ARRAY, PROFESSION_ARRAY[0]))
+}
 
 function fillTable(pageNumber, pageSize) {
     $.get(`http://localhost:8080/rest/players?pageNumber=${pageNumber}&pageSize=${pageSize}`, (players) => {
-        console.log(players);
 
         const $playersTableBody = $('.players-table-body')[0];
         let htmlRows = '';
@@ -148,8 +155,29 @@ function setActivePageButton(activePageButtonIndex=0){
 //
 // }
 
-function createPlayer(){
-   // console.log('CREATE');
+function createAccount(){
+   const data = {
+       name: $('[data-create-name]').val(),
+       title: $('[data-create-title]').val(),
+       race: $('[data-create-race]').val(),
+       profession: $('[data-create-profession]').val(),
+       level: $('[data-create-level]').val(),
+       birthday: new Date($('[data-create-birthday]').val()).getTime(),
+       banned: $('[data-create-banned]').val() === 'on',
+   }
+  // console.log(data);
+
+    $.ajax({
+       url: `/rest/players`,
+       type: 'POST',
+       data: JSON.stringify(data),
+       dataType: "json",
+       contentType: "application/json",
+       success: function(){
+           updatePlayersCount();
+           fillTable(currentPageNumber, accountsPerPage);
+       }
+   })
 }
 
 function removeAccountHandler(e){
