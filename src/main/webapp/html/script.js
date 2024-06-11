@@ -8,11 +8,9 @@ const PROFESSION_ARRAY = ['WARRIOR', 'ROGUE', 'SORCERER', 'CLERIC', 'PALADIN', '
 const BANNED_ARRAY = ['true', 'false'];
 
 setTimeout(() =>{initCreateForm()}, 1000);
-// initCreateForm();
 fillTable(currentPageNumber, accountsPerPage);
 updatePlayersCount();
 setTimeout(()=>{createAccountPerPageDropdown()}, 1000)
-// createAccountPerPageDropdown()
 
 function initCreateForm(){
     const $raceSelect = document.querySelector('[data-create-race]');
@@ -137,24 +135,6 @@ function setActivePageButton(activePageButtonIndex=0){
     $activeButton.classList.add('active-pagination-button');
 }
 
-// function removeAccountHandler(e){
-//     const accountID = e.currentTarget.value;
-//     console.log('remove' + accountID)
-//     fetch(`http://localhost:8080/rest/players/${accountID}`,{
-//         method: 'DELETE'
-//     }).then(response =>{
-//         if(!response.ok){
-//             throw new Error('DELETE response is not OK');
-//         }
-//         else console.log('Account ' + accountID + ' was removed');
-//     })
-//
-//     updatePlayersCount();
-//     fillTable(currentPageNumber, accountsPerPage);
-//
-//
-// }
-
 function createAccount(){
    const data = {
        name: $('[data-create-name]').val(),
@@ -165,7 +145,7 @@ function createAccount(){
        birthday: new Date($('[data-create-birthday]').val()).getTime(),
        banned: $('[data-create-banned]').val() === 'on',
    }
-  // console.log(data);
+
 
     $.ajax({
        url: `/rest/players`,
@@ -193,28 +173,6 @@ function removeAccountHandler(e){
         }
     })
 }
-
-// function updateAccount({accountId, data}){
-//      fetch(`http://localhost:8080/rest/players/${accountId}`,{
-//          method: "POST",
-//          body: JSON.stringify({
-//              data: data
-//          }),
-//          headers: {
-//              "content-type": "application/json",
-//              "data-type": "json"
-//          }
-//      }).then(response =>{
-//          if(!response.ok){
-//              throw new Error('UPDATE response is not OK');
-//          }
-//          else console.log('Account ' + accountId + ' was updated');
-//      })
-//
-//     // updatePlayersCount();
-//     fillTable(currentPageNumber, accountsPerPage);
-//     // console.log('here');
-// }
 
 function updateAccount({accountId, data}){
     $.ajax({
