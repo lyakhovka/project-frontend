@@ -182,7 +182,6 @@ function updateAccount({accountId, data}){
         contentType: "application/json",
         dataType: "json",
         success: function (){
-          //  updatePlayersCount();
             fillTable(currentPageNumber, accountsPerPage);
         }
     })
